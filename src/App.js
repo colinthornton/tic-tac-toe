@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import { Modal, Button } from 'react-bootstrap';
 import './App.css';
 
 class App extends Component {
@@ -9,13 +10,45 @@ class App extends Component {
       board: ["", "", "", "", "", "", "", "", ""],
       human: "X",
       computer: "O",
-      turn: 0
+      turn: 0,
+      gameIsOn: false,
+      showChooseLetter: false
     }
   }
 
+  openChooseLetter = () => {
+    this.setState({
+      showChooseLetter: true
+    });
+  }
+
+  closeChooseLetter = () => {
+    this.setState({
+      showChooseLetter: false
+    });
+  }
+
+  handleChooseLetter = (e) => {
+    let human = e.target.id;
+    let computer;
+    human === "X" ? computer = "O" : computer = "X"
+    this.setState({
+      human: human,
+      computer: computer,
+      gameIsOn: true,
+    })
+    this.closeChooseLetter();
+  }
+
   handleClick = (e) => {
-    this.updateBoard(e.target.id, this.state.human);
-    this.computerMove();
+    if (this.state.gameIsOn) {
+      this.updateBoard(e.target.id, this.state.human);
+      this.checkWin();
+      if (this.state.gameIsOn) {
+        this.computerMove();
+        this.checkWin();
+      }       
+    }
   }
 
   updateBoard = (index, player) => {
@@ -64,6 +97,9 @@ class App extends Component {
     else if (board[2] !== "" && board[2] === board[4] && board[2] === board[6]) {
       alert(board[2] + " wins!");
     }
+    else if (this.state.turn === 9) {
+      alert("No Contest");
+    }
   }
 
   render() {
@@ -73,9 +109,33 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to Ticky Tacky Toe</h2>
         </div>
-        <Board  board={this.state.board}
-                handleClick={this.handleClick}
-                checkWin={this.checkWin} />
+        <Modal
+          show={this.state.showChooseLetter}
+          onHide={this.closeChooseLetter}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Choose Your Letter</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div id="modalBtnContainer">
+              <div className="modalBtn"><span id="X" onClick={this.handleChooseLetter}>X</span></div>
+              <div className="modalBtn"><span id="O" onClick={this.handleChooseLetter}>O</span></div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.closeChooseLetter}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+        <Board
+          board={this.state.board}
+          handleClick={this.handleClick}
+          checkWin={this.checkWin}
+        />
+        <Button
+          bsStyle="primary"
+          bsSize="large"
+          onClick={this.openChooseLetter}
+        >Start Game</Button>
       </div>
     );
   }
@@ -83,29 +143,19 @@ class App extends Component {
 
 class Board extends Component {
   componentDidUpdate() {
-    this.props.checkWin();
+
   }
+
   render() {
+    let buttons = [];
+    for (let i = 0; i < 9; i++) {
+      buttons.push(
+        <div className="gameBtn"><span id={String(i)} onClick={this.props.handleClick}>{this.props.board[i]}</span></div>
+      )
+    }
     return (
       <div id="board">
-        <div className="gameBtn" id="0" onClick={this.props.handleClick}>
-          {this.props.board[0]}</div>
-        <div className="gameBtn" id="1" onClick={this.props.handleClick}>
-          {this.props.board[1]}</div>
-        <div className="gameBtn" id="2" onClick={this.props.handleClick}>
-          {this.props.board[2]}</div>
-        <div className="gameBtn" id="3" onClick={this.props.handleClick}>
-          {this.props.board[3]}</div>
-        <div className="gameBtn" id="4" onClick={this.props.handleClick}>
-          {this.props.board[4]}</div>
-        <div className="gameBtn" id="5" onClick={this.props.handleClick}>
-          {this.props.board[5]}</div>
-        <div className="gameBtn" id="6" onClick={this.props.handleClick}>
-          {this.props.board[6]}</div>
-        <div className="gameBtn" id="7" onClick={this.props.handleClick}>
-          {this.props.board[7]}</div>
-        <div className="gameBtn" id="8" onClick={this.props.handleClick}>
-          {this.props.board[8]}</div>
+        {buttons}
       </div>
     )
   }

@@ -9,18 +9,30 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 200px;
   padding: 20px;
+  min-width: 500px;
   color: white;
-}
-
-.App-intro {
-  font-size: large;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+#modalBtnContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 330px;
+}
+
+.modalBtn {
+  background: #61DAFB;
+  display: inline-block;
+  width: 145px;
+  height: 145px;
+  margin: 10px;
+  text-align: center;
 }
 
 #board {
@@ -38,6 +50,13 @@
   margin: 2%;
 }
 
-.gameBtn span {
+.gameBtn span,
+.modalBtn span {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  line-height: 145px;
   vertical-align: middle;
+  font-size: 10em;
+  cursor: default;
 }
