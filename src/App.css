@@ -5,6 +5,7 @@
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+  margin-top: 10px;
 }
 
 .App-header {
@@ -15,9 +16,17 @@
   color: white;
 }
 
+.App-header h2 {
+  margin-top: 35px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.modal-dialog {
+  margin: 300px auto;
 }
 
 #modalBtnContainer {
@@ -33,6 +42,11 @@
   height: 145px;
   margin: 10px;
   text-align: center;
+}
+
+.container {
+  min-width: 500px;
+  margin-bottom: 20px;
 }
 
 #board {
@@ -59,4 +73,29 @@
   vertical-align: middle;
   font-size: 10em;
   cursor: default;
+}
+
+#declareWinner .modal-body {
+  text-align: center;
+  font-size: 6em;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #222;
+  color: white;
+}
+
+#footer span {
+  float: right;
+  display:inline-block;
+  height: 100%;
+  line-height: 40px;
+  vertical-align: middle;
+  padding-right: 20px;
+  font-size: 1.5em;
 }

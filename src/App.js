@@ -10,9 +10,13 @@ class App extends Component {
       board: ["", "", "", "", "", "", "", "", ""],
       human: "X",
       computer: "O",
-      turn: 0,
+      turn: 1,
       gameIsOn: false,
-      showChooseLetter: false
+      clickAllowed: false,
+      winner: "",
+      disableStartButton: false,
+      showChooseLetter: false,
+      showDeclareWinner: false
     }
   }
 
@@ -26,6 +30,13 @@ class App extends Component {
     this.setState({
       showChooseLetter: false
     });
+    setTimeout( () => {
+      if (!this.state.gameIsOn) {
+        this.setState({
+          disableStartButton: false
+        });
+      }
+    }, 200);
   }
 
   handleChooseLetter = (e) => {
@@ -36,18 +47,25 @@ class App extends Component {
       human: human,
       computer: computer,
       gameIsOn: true,
+      clickAllowed: true,
+      disableStartButton: true
     })
     this.closeChooseLetter();
   }
 
   handleClick = (e) => {
-    if (this.state.gameIsOn) {
+    console.log("human: " + this.state.turn);
+    if (this.state.gameIsOn && this.state.clickAllowed) {
+      this.setState({ clickAllowed: false });
       this.updateBoard(e.target.id, this.state.human);
-      this.checkWin();
-      if (this.state.gameIsOn) {
-        this.computerMove();
-        this.checkWin();
-      }       
+      setTimeout( () => {
+        if (this.state.gameIsOn) {
+          this.computerMove();
+          if (this.state.gameIsOn) {
+            this.setState({ clickAllowed: true });
+          }
+        }
+      }, 500);
     }
   }
 
@@ -55,12 +73,13 @@ class App extends Component {
     let board = this.state.board;
     board[index] = player;
     this.setState({
-      board: board,
-      turn: this.state.turn++
+      board: board
     });
+    this.checkWin();
   }
 
   computerMove = () => {
+    console.log("computer: " + this.state.turn)
     let openSpaces = [];
     this.state.board.forEach((space, i) => {
       if (space === "") openSpaces.push(i);
@@ -71,35 +90,84 @@ class App extends Component {
   }
 
   checkWin = () => {
-    if (this.state.turn < 3) return;
+    console.log("checking win for turn " + this.state.turn);
+    if (!this.state.gameIsOn) return;
+    if (this.state.turn < 3) {
+      this.incrementTurn();
+      return;
+    }
     let board = this.state.board;
+
     if (board[0] !== "" && board[0] === board[1] && board[0] === board[2]) {
-      alert(board[0] + " wins!");
+      this.declareWinner(board[0]);
     }
     else if (board[3] !== "" && board[3] === board[4] && board[3] === board[5]) {
-      alert(board[3] + " wins!");
+      this.declareWinner(board[3]);
     }
     else if (board[6] !== "" && board[6] === board[7] && board[6] === board[8]) {
-      alert(board[6] + " wins!");
+      this.declareWinner(board[6]);
     }
     else if (board[0] !== "" && board[0] === board[3] && board[0] === board[6]) {
-      alert(board[0] + " wins!");
+      this.declareWinner(board[0]);
     }
     else if (board[1] !== "" && board[1] === board[4] && board[1] === board[7]) {
-      alert(board[1] + " wins!");
+      this.declareWinner(board[1]);
     }
     else if (board[2] !== "" && board[2] === board[5] && board[2] === board[8]) {
-      alert(board[2] + " wins!");
+      this.declareWinner(board[2]);
     }
     else if (board[0] !== "" && board[0] === board[4] && board[0] === board[8]) {
-      alert(board[0] + " wins!");
+      this.declareWinner(board[0]);
     }
     else if (board[2] !== "" && board[2] === board[4] && board[2] === board[6]) {
-      alert(board[2] + " wins!");
+      this.declareWinner(board[2]);
     }
     else if (this.state.turn === 9) {
-      alert("No Contest");
+      this.declareWinner("Nobody");
     }
+
+    this.incrementTurn();
+  }
+
+  incrementTurn = () => {
+    this.setState({
+      turn: this.state.turn + 1
+    })
+  }
+
+  declareWinner = (winner) => {
+    console.log("winner is " + winner);
+    this.setState({
+      winner: winner,
+      gameIsOn: false
+    });
+    this.openDeclareWinner();
+  }
+
+  openDeclareWinner = () => {
+    this.setState({
+      showDeclareWinner: true
+    });
+  }
+
+  closeDeclareWinner = () => {
+    this.setState({
+      showDeclareWinner: false
+    });
+    this.resetGame();
+  }
+
+  resetGame = () => {
+    this.setState({
+      board: ["", "", "", "", "", "", "", "", ""],
+      human: "X",
+      computer: "O",
+      turn: 1,
+      gameIsOn: false,
+      clickAllowed: false,
+      winner: ""
+    });
+    this.openChooseLetter();
   }
 
   render() {
@@ -109,11 +177,12 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to Ticky Tacky Toe</h2>
         </div>
+
         <Modal
           show={this.state.showChooseLetter}
-          onHide={this.closeChooseLetter}
+          //onHide={this.closeChooseLetter}
         >
-          <Modal.Header closeButton>
+          <Modal.Header>
             <Modal.Title>Choose Your Letter</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -122,20 +191,38 @@ class App extends Component {
               <div className="modalBtn"><span id="O" onClick={this.handleChooseLetter}>O</span></div>
             </div>
           </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.closeChooseLetter}>Close</Button>
-          </Modal.Footer>
         </Modal>
-        <Board
-          board={this.state.board}
-          handleClick={this.handleClick}
-          checkWin={this.checkWin}
-        />
-        <Button
-          bsStyle="primary"
-          bsSize="large"
-          onClick={this.openChooseLetter}
-        >Start Game</Button>
+
+        <div className="container">
+          <Board
+            board={this.state.board}
+            handleClick={this.handleClick}
+            checkWin={this.checkWin}
+          />
+
+          <Button
+            disabled={this.state.disableStartButton}
+            bsStyle="primary"
+            bsSize="large"
+            onClick={this.openChooseLetter}
+          >Start Game</Button>
+        </div>
+
+        <Modal
+          show={this.state.showDeclareWinner}
+          onHide={this.closeDeclareWinner}
+          id="declareWinner"
+        >
+          <Modal.Header closeButton>
+          </Modal.Header>
+          <Modal.Body>
+            {this.state.winner} Wins!
+          </Modal.Body>
+        </Modal>
+
+        <div id="footer">
+          <span>Made by <a href="https://colinthornton.github.io">Colin Thornton</a></span>
+        </div>
       </div>
     );
   }
