@@ -306,10 +306,6 @@ class App extends Component {
 }
 
 class Board extends Component {
-  componentDidUpdate() {
-
-  }
-
   render() {
     let buttons = [];
     for (let i = 0; i < 9; i++) {
