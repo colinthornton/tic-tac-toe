@@ -8,8 +8,8 @@ class App extends Component {
     super(props);
     this.state = {
       board: ["", "", "", "", "", "", "", "", ""],
-      human: "X",
-      computer: "O",
+      human: "",
+      computer: "",
       turn: 1,
       gameIsOn: false,
       clickAllowed: false,
@@ -81,12 +81,89 @@ class App extends Component {
   computerMove = () => {
     console.log("computer: " + this.state.turn)
     let openSpaces = [];
+    let chosenSpace;
     this.state.board.forEach((space, i) => {
       if (space === "") openSpaces.push(i);
     });
+    chosenSpace = this.computerCanWinHere(openSpaces);
+    if (chosenSpace !== null) {
+      console.log("chosenSpace to win is " + chosenSpace);
+      this.updateBoard(chosenSpace, this.state.computer);
+      return;
+    }
+    chosenSpace = this.computerCanBlockHere(openSpaces);
+    if (chosenSpace !== null) {
+      console.log("chosenSpace to block is " + chosenSpace);
+      this.updateBoard(chosenSpace, this.state.computer);
+      return;
+    }
     let chosenSpaceIndex = Math.floor(Math.random() * openSpaces.length);
-    let chosenSpace = openSpaces[chosenSpaceIndex];
+    chosenSpace = openSpaces[chosenSpaceIndex];
+    console.log("random chosenSpace is " + chosenSpace);
     this.updateBoard(chosenSpace, this.state.computer);
+  }
+
+  //recieves array of indeces of open spaces on state.board
+  //return space to play for win
+  computerCanWinHere = (openSpaces) => {
+    console.log("entered computerCanWinHere(" + openSpaces +")")
+    let board = this.state.board;
+    for (let i = 0; i < openSpaces.length; i++) {
+      board[openSpaces[i]] = this.state.computer;
+      if (this.winMovePossible(board)) {
+        return openSpaces[i];
+      } else {
+        board[openSpaces[i]] = "";
+      }
+    }
+    return null;
+  }
+
+  //recieves array of indeces of open spaces on state.board
+  //return space to play for block
+  computerCanBlockHere = (openSpaces) => {
+    console.log("entered computerCanBlockHere(" + openSpaces +")")
+    let board = this.state.board;
+    for (let i = 0; i < openSpaces.length; i++) {
+      board[openSpaces[i]] = this.state.human;
+      if (this.winMovePossible(board)) {
+        return openSpaces[i];
+      } else {
+        board[openSpaces[i]] = "";
+      }
+    }
+    return null;
+  }
+
+  winMovePossible = (board) => {
+    console.log("entered winMovePossible(" + board + ")")
+    if (board[0] !== "" && board[0] === board[1] && board[0] === board[2]) {
+      return true;
+    }
+    else if (board[3] !== "" && board[3] === board[4] && board[3] === board[5]) {
+      return true;
+    }
+    else if (board[6] !== "" && board[6] === board[7] && board[6] === board[8]) {
+      return true;
+    }
+    else if (board[0] !== "" && board[0] === board[3] && board[0] === board[6]) {
+      return true;
+    }
+    else if (board[1] !== "" && board[1] === board[4] && board[1] === board[7]) {
+      return true;
+    }
+    else if (board[2] !== "" && board[2] === board[5] && board[2] === board[8]) {
+      return true;
+    }
+    else if (board[0] !== "" && board[0] === board[4] && board[0] === board[8]) {
+      return true;
+    }
+    else if (board[2] !== "" && board[2] === board[4] && board[2] === board[6]) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   checkWin = () => {
@@ -160,8 +237,8 @@ class App extends Component {
   resetGame = () => {
     this.setState({
       board: ["", "", "", "", "", "", "", "", ""],
-      human: "X",
-      computer: "O",
+      human: "",
+      computer: "",
       turn: 1,
       gameIsOn: false,
       clickAllowed: false,
