@@ -56,6 +56,7 @@ class App extends Component {
   handleClick = (e) => {
     console.log("human: " + this.state.turn);
     if (this.state.gameIsOn && this.state.clickAllowed) {
+      if (this.state.board[e.target.id] !== "") return;
       this.setState({ clickAllowed: false });
       this.updateBoard(e.target.id, this.state.human);
       setTimeout( () => {
