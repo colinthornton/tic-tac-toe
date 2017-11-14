@@ -71,7 +71,7 @@ class App extends Component {
   }
 
   updateBoard = (index, player) => {
-    let board = this.state.board;
+    let board = this.state.board.slice();
     board[index] = player;
     this.setState({
       board: board
@@ -108,7 +108,7 @@ class App extends Component {
   //return space to play for win
   computerCanWinHere = (openSpaces) => {
     console.log("entered computerCanWinHere(" + openSpaces +")")
-    let board = this.state.board;
+    let board = this.state.board.slice();
     for (let i = 0; i < openSpaces.length; i++) {
       board[openSpaces[i]] = this.state.computer;
       if (this.winMovePossible(board)) {
@@ -124,7 +124,7 @@ class App extends Component {
   //return space to play for block
   computerCanBlockHere = (openSpaces) => {
     console.log("entered computerCanBlockHere(" + openSpaces +")")
-    let board = this.state.board;
+    let board = this.state.board.slice();
     for (let i = 0; i < openSpaces.length; i++) {
       board[openSpaces[i]] = this.state.human;
       if (this.winMovePossible(board)) {
@@ -174,7 +174,7 @@ class App extends Component {
       this.incrementTurn();
       return;
     }
-    let board = this.state.board;
+    let board = this.state.board.slice();
 
     if (board[0] !== "" && board[0] === board[1] && board[0] === board[2]) {
       this.declareWinner(board[0]);
