@@ -76,7 +76,7 @@ class App extends Component {
     this.setState({
       board: board
     });
-    this.checkWin();
+    this.checkWin(board);
   }
 
   computerMove = () => {
@@ -167,14 +167,13 @@ class App extends Component {
     }
   }
 
-  checkWin = () => {
+  checkWin = (board) => {
     console.log("checking win for turn " + this.state.turn);
     if (!this.state.gameIsOn) return;
     if (this.state.turn < 3) {
       this.incrementTurn();
       return;
     }
-    let board = this.state.board.slice();
 
     if (board[0] !== "" && board[0] === board[1] && board[0] === board[2]) {
       this.declareWinner(board[0]);
