@@ -16,25 +16,19 @@ class App extends Component {
       winner: "",
       disableStartButton: false,
       showChooseLetter: false,
-      showDeclareWinner: false
+      showDeclareWinner: false,
     }
   }
 
   openChooseLetter = () => {
-    this.setState({
-      showChooseLetter: true
-    });
+    this.setState({ showChooseLetter: true });
   }
 
   closeChooseLetter = () => {
-    this.setState({
-      showChooseLetter: false
-    });
+    this.setState({ showChooseLetter: false });
     setTimeout( () => {
       if (!this.state.gameIsOn) {
-        this.setState({
-          disableStartButton: false
-        });
+        this.setState({ disableStartButton: false });
       }
     }, 200);
   }
@@ -44,11 +38,11 @@ class App extends Component {
     let computer;
     human === "X" ? computer = "O" : computer = "X"
     this.setState({
-      human: human,
-      computer: computer,
+      human,
+      computer,
       gameIsOn: true,
       clickAllowed: true,
-      disableStartButton: true
+      disableStartButton: true,
     })
     this.closeChooseLetter();
   }
@@ -73,9 +67,7 @@ class App extends Component {
   updateBoard = (index, player) => {
     let board = this.state.board.slice();
     board[index] = player;
-    this.setState({
-      board: board
-    });
+    this.setState({ board });
     this.checkWin(board);
   }
 
@@ -207,30 +199,24 @@ class App extends Component {
   }
 
   incrementTurn = () => {
-    this.setState({
-      turn: this.state.turn + 1
-    })
+    this.setState({ turn: this.state.turn + 1 })
   }
 
   declareWinner = (winner) => {
     console.log("winner is " + winner);
     this.setState({
-      winner: winner,
+      winner,
       gameIsOn: false
     });
     this.openDeclareWinner();
   }
 
   openDeclareWinner = () => {
-    this.setState({
-      showDeclareWinner: true
-    });
+    this.setState({ showDeclareWinner: true });
   }
 
   closeDeclareWinner = () => {
-    this.setState({
-      showDeclareWinner: false
-    });
+    this.setState({ showDeclareWinner: false });
     this.resetGame();
   }
 
@@ -242,7 +228,7 @@ class App extends Component {
       turn: 1,
       gameIsOn: false,
       clickAllowed: false,
-      winner: ""
+      winner: "",
     });
     this.openChooseLetter();
   }
