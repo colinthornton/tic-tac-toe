@@ -1,5 +1,10 @@
+#root, .App {
+  height: 100%;
+}
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -9,10 +14,10 @@
 }
 
 .App-header {
+  text-align: center;
   background-color: #222;
-  height: 200px;
+  flex-basis: 15%;
   padding: 20px;
-  min-width: 500px;
   color: white;
 }
 
@@ -45,13 +50,13 @@
 }
 
 .container {
-  min-width: 500px;
-  margin-bottom: 20px;
+  flex-basis: 80%;
+  width: 100%;
 }
 
 #board {
-  width: 500px;
-  height: 500px;
+  width: 70%;
+  height: 70%;
   margin: 30px auto;
 }
 
@@ -81,11 +86,7 @@
 }
 
 #footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40px;
+  flex-basis: 5%;
   background: #222;
   color: white;
 }
