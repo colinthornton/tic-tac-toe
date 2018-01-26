@@ -237,8 +237,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to Ticky Tacky Toe</h2>
+          <a href="https://www.freecodecamp.org/challenges/build-a-tic-tac-toe-game"><img src={logo} className="App-logo" alt="logo" /></a>
         </div>
 
         <Modal
